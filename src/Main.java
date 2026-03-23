@@ -1,117 +1,108 @@
-import Model.Animal;
-import Model.Enum.GENDER;
-import Model.Person;
-import Service.GenericServise;
-import Service.Impl.AnimalServiceImpl;
-import Service.Impl.PersonServiceImpl;
+import db.DataBase;
+import model.Contact;
+import model.Phone;
+import service.ContactService;
+import service.Impl.ContactServiceImpl;
+import service.Impl.PhoneServiceImpl;
+import service.PhoneService;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.function.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        GenericServise<Animal> genericServise = new AnimalServiceImpl();
-        GenericServise<Person> genericServise2 = new PersonServiceImpl();
-        List<Animal> animals = new ArrayList<>(List.of(new Animal("animal1", GENDER.MALE, 23),  new Animal("animal2", GENDER.FEMALE, 654),
-        new Animal("animal3", GENDER.FEMALE, 34)));
-        List<Person> persons = new ArrayList<>(List.of(
-                new Person("person1", GENDER.MALE, 34),
-                new Person("person2", GENDER.FEMALE, 34),
-                new Person("person3", GENDER.MALE, 43),
-                new Person("person4", GENDER.FEMALE, 37)
+        DataBase db = new DataBase();
 
-                ));
-        int choice2 = 0;
-        long id = 0;
-        int choose = 0;
+        ContactService contactService = new ContactServiceImpl(db);
+        PhoneService phoneService = new PhoneServiceImpl(db);
+        String contactName = "";
+        String phoneName = "";
+        String brand = "";
+        String phoneNumber = "";
+        int ID = 0;
+        String newName = "";
 
         while (true) {
             menu();
             System.out.println("Enter your choice: ");
             int choice = sc.nextInt();
+            sc.nextLine();
             switch (choice) {
                 case 1:
-                    System.out.println("1. Add animal" +
-                            "\n2. Add person");
-                    choice2 = sc.nextInt();
-                    if (choice2 == 1) {
-                        System.out.println(genericServise.add(animals));
-                    } else if (choice2 == 2) {
-                        System.out.println(genericServise2.add(persons));
-                    } else {
-                        System.out.println("Invalid choice");
-                    }
+                    System.out.println("Enter your phone name: ");
+                    phoneName = sc.nextLine();
+                    System.out.println("Enter your brand: ");
+                    brand = sc.nextLine();
+                    System.out.println(phoneService.addPhone(new Phone(phoneName, brand)));
                     break;
                 case 2:
-                    System.out.println("Enter id: ");
-                    id = sc.nextLong();
-                    System.out.println("1. animal" +
-                            "\n2. person");
-                    choice2 = sc.nextInt();
-                    if (choice2 == 1) {
-                        System.out.println(genericServise.getById(id));
-                    } else if (choice2 == 2) {
-                        System.out.println(genericServise2.getById(id));
-                    } else {
-                        System.out.println("Invalid choice");
-                    }
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    System.out.println(phoneService.getPhoneById(ID));
                     break;
                 case 3:
-                    System.out.println("1. animal" +
-                            "\n2. person");
-                    choice2 = sc.nextInt();
-                    if (choice2 == 1) {
-                        System.out.println(genericServise.getAll());
-                    } else if (choice2 == 2) {
-                        System.out.println(genericServise2.getAll());
-                    } else {
-                        System.out.println("Invalid choice");
-                    }
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Enter your new name: ");
+                    newName = sc.nextLine();
+                    System.out.println(phoneService.updatePhoneNameById(ID, newName));
                     break;
                 case 4:
-                    System.out.println("1. animal" +
-                            "\n2. person");
-                    choice2 = sc.nextInt();
-                    choose = sc.nextInt();
-                    if (choice2 == 1) {
-                        System.out.println(genericServise.sortByName(choose));
-                    } else if (choice2 == 2) {
-                        System.out.println(genericServise2.sortByName(choose));
-                    } else {
-                        System.out.println("Invalid choice");
-                    }
+                    System.out.println(phoneService.getAllPhones());
                     break;
                 case 5:
-                    System.out.println("1. animal" +
-                            "\n2. person");
-                    choice2 = sc.nextInt();
-                    System.out.println("1. female" + "\n2. male");
-                    choose = sc.nextInt();
-                    if (choice2 == 1) {
-                        System.out.println(genericServise.filterByGender(choose));
-                    } else if (choice2 == 2) {
-                        System.out.println(genericServise2.filterByGender(choose));
-                    } else {
-                        System.out.println("Invalid choice");
-                    }
+                    System.out.println("Enter brand: ");
+                    sc.nextLine();
+                    brand = sc.nextLine();
+                    System.out.println(phoneService.getAllPhonesByBrand(brand));
                     break;
                 case 6:
-                    System.out.println("1. animal" +
-                            "\n2. person");
-                    choice2 = sc.nextInt();
-                    if (choice2 == 1) {
-                        System.out.println(genericServise.clear());
-                    } else if (choice2 == 2) {
-                        System.out.println(genericServise2.clear());
-                    }  else {
-                        System.out.println("Invalid choice");
-                    }
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    phoneService.deletePhoneById(ID);
                     break;
                 case 7:
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Enter your contact name: ");
+                    contactName = sc.nextLine();
+                    System.out.println("Enter your contact number: ");
+                    phoneNumber = sc.nextLine();
+                    System.out.println(contactService.addContactToPhone(ID, new Contact(contactName, phoneNumber)));
+                    break;
+                case 8:
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Enter contact name: ");
+                    contactName = sc.nextLine();
+                    System.out.println(contactService.findContactByName(ID, contactName));
+                    break;
+                case 9:
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Enter contact number: ");
+                    phoneNumber = sc.nextLine();
+                    System.out.println(contactService.findContactByPhoneNumber(ID, phoneNumber));
+                    break;
+                case  10:
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    System.out.println(contactService.sortContactsByName(ID));
+                    break;
+                case 11:
+                    System.out.println("Enter ID: ");
+                    ID = sc.nextInt();
+                    sc.nextLine();
+                    System.out.println("Enter contact name: ");
+                    contactName = sc.nextLine();
+                    contactService.deleteContactByNameFromPhone(ID, contactName);
+                    break;
+                case 12:
                     System.exit(0);
                     break;
                     default:
@@ -120,15 +111,20 @@ public class Main {
             }
         }
     }
-    public static void menu () {
+    public static void menu(){
         System.out.println("""
-                1. add list
-                2. get byld by id
-                3. get all
-                4. sort by name
-                5. sort by gender
-                6. clear
-                7. exist
-                """);
+                menu:
+                1. add phone
+                2. get phone by id
+                3. update phone name by id
+                4. get all phones
+                5. get all phones by brand
+                6. delete phone by id
+                7. add contact to phone
+                8. find contact by name
+                9. find contact by phone number
+                10. sort contacts by name
+                11. delete contact by name from phone
+                12. exit""");
     }
 }
